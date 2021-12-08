@@ -1,0 +1,101 @@
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<h1>System Users</h1>
+<div id="users"></div>
+
+<h2>Delete User</h2>
+<table>
+<tr>
+<td><button id="deleteButton" type="button">Delete User</button></td>
+<td><input id="delteUserNum" type="number"></td>
+</tr>
+</table>
+</div>
+<div>
+<h2>Add User</h2>
+<table>
+<tr><td>Name: </td><td> <input id="addUserName"></td></tr>
+<tr><td>Password: </td><td> <input id="addUserPassword"></td></tr>
+<tr><td>Profession: </td><td> <input id="addUserProfession"></td></tr>
+<tr><td>ID: </td><td> <input id="addUserId" type="number"></td></tr>
+<tr><td><button id="addButton" type="button">Add User</button></td></tr>
+</table>
+</div>
+<div>
+<h2>Refresh List</h2>
+<td><button id="refreshButton" type="button">Refresh User</button></td>
+</div>
+<div>
+<h2>Filter Users</h2>
+<table>
+<tr>
+<td><button id="filterButton" type="button">Filter Users</button></td>
+<td><input id="filterUserNum" type="number"></td>
+</tr>
+</table>
+</div>
+
+<script type="text/javascript">
+$('#deleteButton').click(function(){
+$.ajax({
+url: '/api/v1/deleteUser?user=' + document.getElementById("delteUserNum").value,
+type: 'DELETE',
+success: function(result) {
+console.log("Delete Returned");
+document.getElementById("users").innerHTML = "<pre>"+JSON.stringify(JSON.parse(result), null,
+2)+"</pre>";
+}
+});
+})
+$('#filterButton').click(function(){
+$.ajax({
+url: '/api/v1/' + document.getElementById("filterUserNum").value,
+type: 'GET',
+success: function(result) {
+console.log("Filter Returned");
+document.getElementById("users").innerHTML = "<pre>"+JSON.stringify(JSON.parse(result), null,
+2)+"</pre>";
+}
+});
+})
+$('#addButton').click(function(){
+$.ajax({
+url: "/api/v1/addUser?user="+document.getElementById("addUserId").value
++ "&name=" +document.getElementById("addUserName").value
++ "&password=" + document.getElementById("addUserPassword").value
++ "&profession=" + document.getElementById("addUserProfession").value,
+type: 'POST',
+success: function(result) {
+console.log("Add Returned");
+document.getElementById("users").innerHTML = "<pre>"+JSON.stringify(JSON.parse(result), null,
+2)+"</pre>";
+}
+});
+})
+$('#refreshButton').click(function(){
+$.ajax({
+url: '/api/v1/listUsers',
+type: 'GET',
+success: function(result) {
+document.getElementById("users").innerHTML = "<pre>"+JSON.stringify(JSON.parse(result), null,
+2)+"</pre>";
+}
+});
+})
+
+$(document).ready(function() {
+$.ajax({
+url: '/api/v1/listUsers',
+type: 'GET',
+success: function(result) {
+document.getElementById("users").innerHTML = "<pre>"+JSON.stringify(JSON.parse(result), null,
+2)+"</pre>";
+}
+});
+});
+</script>
+</body>
+</html>
